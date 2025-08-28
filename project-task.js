@@ -33,18 +33,30 @@ const readlineSync = require('readline-sync');
 let animals = [];
 let fees = [];
 function addAnimal(name, fee) {
+    try{
     if (!name || fee < 0) {
         throw new Error("Invalid animal name or adoption fee!");
     }
-    animals.push(name);
-    fees.push(fee);
+    else if((name) && fee > 0){
+        animals.push(name);
+        fees.push(fee);
+        console.log(`${name} added with a fee of $${fee}`);
+    }
+} catch(err){
+    console.log(err.message);
+}
 }
 function getAdoptionFee(animalName) {
+    try{
     let index = animals.indexOf(animalName);
     if (index === -1) {
         throw new Error("Animal not found in records!");
     }
+    else {console.log(`${animalName}'s adoption fee is $${getAdoptionFee(animalName)}.`);}
     return fees[index];
+}catch(err){
+    console.log(err.message);
+}
 }
 // Main program
 console.log("Welcome to the Pet Shelter System");
@@ -58,7 +70,9 @@ while (true) {
         let animal = readlineSync.question("Enter the animal's name: ");
         let fee = Number(readlineSync.question("Enter the adoption fee: "));
         addAnimal(animal, fee);
-        console.log(`${animal} added with a fee of $${fee}.`);
+       // console.log(`${animal} added with a fee of $${fee}.`);
+       console.log(animals);
+       console.log(fees);
     } else if (action === "fee") {
         let animal = readlineSync.question("Enter the animal's name to find its adoption fee: ");
         console.log(`${animal}'s adoption fee is $${getAdoptionFee(animal)}.`);
@@ -66,19 +80,20 @@ while (true) {
         console.log("Invalid action. Please choose 'add', 'fee', or 'exit'.");
     }
 }
-
-
-
 /*
 Problems to Solve
-
 Invalid Input Errors:
   What happens if the user provides a negative adoption fee or leaves the name blank?
+  Answer : throw new Error("Invalid animal name or adoption fee!");
+        ^
+Error: Invalid animal name or adoption fee!
   What happens if the user tries to find the fee for an animal that hasn’t been added?
-
+  Answer :  throw new Error("Animal not found in records!");
+        ^
+Error: Animal not found in records!
 Code Flow Problems:
   What happens if the program throws an exception? Does the rest of the code continue running?
-
+  When the program throws an exceptions, there is an halt on an execution. The code stops running then.
 Structured Exception Handling:
   Add try/catch blocks to handle the above errors gracefully.
 */
